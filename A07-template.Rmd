@@ -1,7 +1,7 @@
 ---
 title: "A06- ggplot"
-author: "YOUR NAME"
-date: "DATE"
+author: "Siddharth Lal"
+date: "7/23/24
 output: html_notebook
 ---
 
