@@ -69,6 +69,20 @@ When you make your plot, you will likely find that the axis range is being set b
 
 ```{r}
 ### Your code here
+Trips <- Trips %>%
+  mutate(duration = as.numeric(edate - sdate) / 3600) 
+
+# Filter out outliers
+Trips_filtered <- Trips %>%
+  filter(duration <= 24)
+
+Trips_filtered %>%
+  ggplot(aes(x = client, y = duration)) +
+  geom_boxplot() +
+  labs(title = "Distribution of Rental Duration by Client Type", 
+       x = "Client Type", 
+       y = "Duration (hours)") +
+  theme_minimal()
 
 
 ```
@@ -103,6 +117,11 @@ You can use [Figure 18.3](https://dtkaplan.github.io/DataComputingEbook/project-
 
 ```{r}
 ### Your Code Here
+Trips %>%
+  ggplot(aes(x = yday(sdate))) +
+  geom_density(fill = "gray", color = NA) +
+  labs(title = "Bike Usage by Day of Year", x = "Day of Year", y = "Density") +
+  theme_minimal()
 
 ```
 
@@ -114,6 +133,11 @@ My observations here.....
 
 ```{r}
 ### Your Code Here
+Trips %>%
+  ggplot(aes(x = wday(sdate, label = TRUE))) +
+  geom_density(fill = "gray", color = NA) +
+  labs(title = "Bike Usage by Day of Week", x = "Day of Week", y = "Density") +
+  theme_minimal()
 
 ```
 
@@ -126,6 +150,11 @@ My observations here.....
 
 ```{r}
 ### Your Code Here
+Trips %>%
+  ggplot(aes(x = hour(sdate))) +
+  geom_density(fill = "gray", color = NA) +
+  labs(title = "Bike Usage by Hour of Day", x = "Hour of Day", y = "Density") +
+  theme_minimal()
 
 ```
 
@@ -138,6 +167,11 @@ My observations here.....
 
 ```{r}
 ### Your Code Here
+Trips %>%
+  ggplot(aes(x = minute(sdate))) +
+  geom_density(fill = "gray", color = NA) +
+  labs(title = "Bike Usage by Minute of Hour", x = "Minute of Hour", y = "Density") +
+  theme_minimal()
 
 ```
 
@@ -151,6 +185,18 @@ Group the bike rentals by three variables: hour of the day, day of the week, and
 
 ```{r}
 ### My Code here
+Trips %>%
+  mutate(hour = hour(sdate), 
+         day = wday(sdate, label = TRUE)) %>%
+  group_by(hour, day, client) %>%
+  summarise(count = n()) %>%
+  ggplot(aes(x = hour, y = count, color = client)) +
+  geom_line() +
+  facet_wrap(~ day) +
+  labs(title = "Bike Rentals Grouped by Hour, Day, and Client Type", 
+       x = "Hour of Day", 
+       y = "Count of Rentals") +
+  theme_minimal()
 
 ```
 
@@ -214,6 +260,14 @@ Our goal here is to recreate [Figure 18.5](https://dtkaplan.github.io/DataComput
 
 ```{r}
 ### My code here
+Trips_with_distances <- Trips %>%
+  inner_join(PairDistances, by = c("sstation", "estation"))
+
+Trips_with_distances %>%
+  ggplot(aes(x = distance)) +
+  geom_density(fill = "gray", color = NA) +
+  labs(title = "Distribution of Trip Distances", x = "Distance (km)", y = "Density") +
+  theme_minimal()
 
 ```
 
